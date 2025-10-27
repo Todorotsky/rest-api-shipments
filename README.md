@@ -163,7 +163,7 @@ Updates the status of an existing shipment.
   "destination": "Los Angeles, CA",
   "estimatedDelivery": "2024-07-20T15:30:00.000Z",
   "createdAt": "2024-07-18T10:00:00.000Z",
-  "updatedAt": "2024-07-18T15:45:00.000Z"  ← Updated!
+  "updatedAt": "2024-07-18T15:45:00.000Z"
 }
 ```
 
@@ -227,7 +227,3 @@ The project follows a clean, modular architecture:
 2. **Delivery Calculation**: Helper function calculates estimated delivery time based on distance and average speed (50 mph)
 3. **Status Updates**: Shipment status can be updated via PATCH endpoint with state machine validation
 4. **Storage**: All data is stored in memory (no database)
-
-## License
-
-ISC
