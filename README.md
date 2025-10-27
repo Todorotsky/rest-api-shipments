@@ -22,8 +22,8 @@ A REST API built with TypeScript, Node.js, and Express for tracking shipments. F
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Todorotsky/pallet_coding_task.git
-cd pallet_coding_task
+git clone https://github.com/Todorotsky/rest-api-shipments.git
+cd rest-api-shipments
 ```
 
 2. Install dependencies:
