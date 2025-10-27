@@ -1,5 +1,10 @@
-import { CreateShipmentRequest, Shipment } from "../types/shipments";
+import {
+  CreateShipmentRequest,
+  Shipment,
+  ShipmentStatus,
+} from "../types/shipments";
 import { calculateEstimatedDeliveryTime } from "../utils/deliveryCalculator";
+import { validateStatusTransition } from "../validation/shipmentStateMachine";
 
 // in-memory storage of the shipments
 export const shipments: Shipment[] = [];
@@ -21,7 +26,7 @@ export function createShipment(request: CreateShipmentRequest): Shipment {
 
     const newShipment: Shipment = {
       id: generateId(),
-      status: "Pending",
+      status: ShipmentStatus.PENDING,
       origin: request.origin,
       destination: request.destination,
       estimatedDelivery,
@@ -43,13 +48,15 @@ export function getShipmentById(id: string): Shipment | undefined {
 
 export function updateShipmentStatus(
   id: string,
-  status: string
+  status: ShipmentStatus
 ): Shipment | undefined {
   const shipment = getShipmentById(id);
 
   if (!shipment) {
     return undefined;
   }
+
+  validateStatusTransition(shipment.status, status);
 
   shipment.status = status;
   shipment.updatedAt = new Date();

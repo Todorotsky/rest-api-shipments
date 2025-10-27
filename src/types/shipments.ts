@@ -1,6 +1,13 @@
+export enum ShipmentStatus {
+  PENDING = "Pending",
+  IN_TRANSIT = "In Transit",
+  DELIVERED = "Delivered",
+  CANCELLED = "Cancelled",
+}
+
 export interface Shipment {
   id: string;
-  status: string;
+  status: ShipmentStatus;
   origin: string;
   destination: string;
   estimatedDelivery: Date;
@@ -14,5 +21,5 @@ export interface CreateShipmentRequest {
 }
 
 export interface UpdateStatusRequest {
-  status: string;
+  status: ShipmentStatus;
 }

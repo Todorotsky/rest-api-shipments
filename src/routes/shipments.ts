@@ -4,7 +4,7 @@ import {
   getShipmentById,
   updateShipmentStatus,
 } from "../services/shipmentService";
-import { CreateShipmentRequest } from "../types/shipments";
+import { CreateShipmentRequest, ShipmentStatus } from "../types/shipments";
 
 const router = Router();
 
@@ -38,13 +38,26 @@ router.patch("/:id/status", (req, res) => {
     return res.status(400).json({ error: "Status is required" });
   }
 
-  const shipment = updateShipmentStatus(req.params.id, status);
+  try {
+    const shipment = updateShipmentStatus(
+      req.params.id,
+      status as ShipmentStatus
+    );
 
-  if (!shipment) {
-    return res.status(404).json({ error: "Shipment not found" });
+    if (!shipment) {
+      return res.status(404).json({ error: "Shipment not found" });
+    }
+
+    res.status(200).json(shipment);
+  } catch (error: any) {
+    if (
+      error.message.includes("Invalid status transition") ||
+      error.message.includes("Invalid status")
+    ) {
+      return res.status(400).json({ error: error.message });
+    }
+    throw error;
   }
-
-  res.status(200).json(shipment);
 });
 
 export default router;

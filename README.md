@@ -6,6 +6,7 @@ A REST API built with TypeScript, Node.js, and Express for tracking shipments. F
 
 - ✅ Three REST endpoints for shipment management
 - ✅ TypeScript interfaces for request validation
+- ✅ State machine validation for status transitions
 - ✅ Automatic delivery time calculation based on city pairs
 - ✅ In-memory storage (no database required)
 - ✅ Comprehensive unit tests
@@ -136,6 +137,22 @@ Updates the status of an existing shipment.
 }
 ```
 
+**Valid Status Values:** `"Pending"`, `"In Transit"`, `"Delivered"`, `"Cancelled"`
+
+**State Transitions:**
+
+- `Pending` → `In Transit` or `Cancelled` ✅
+- `In Transit` → `Delivered` or `Cancelled` ✅
+- Terminal states (`Delivered`, `Cancelled`) cannot be changed ❌
+
+**Error (400 Bad Request):**
+
+```json
+{
+  "error": "Invalid status transition from Pending to Delivered"
+}
+```
+
 **Response (200 OK):**
 
 ```json
@@ -177,7 +194,9 @@ Updates the status of an existing shipment.
 ```
 src/
 ├── types/
-│   └── shipments.ts          # TypeScript interfaces
+│   └── shipments.ts          # TypeScript interfaces & enums
+├── validation/
+│   └── shipmentStateMachine.ts  # State transition validation
 ├── services/
 │   └── shipmentService.ts    # Business logic & in-memory storage
 ├── routes/
@@ -196,7 +215,8 @@ index.ts                      # Main server file
 
 The project follows a clean, modular architecture:
 
-- **Types**: Define data structures (Shipment, CreateShipmentRequest, UpdateStatusRequest)
+- **Types**: Define data structures and enums (Shipment, ShipmentStatus)
+- **Validation**: State machine enforces valid status transitions
 - **Services**: Handle business logic and data management
 - **Routes**: Handle HTTP requests and responses
 - **Utils**: Provide helper functions (delivery calculator)
@@ -205,7 +225,7 @@ The project follows a clean, modular architecture:
 
 1. **Creating a Shipment**: User provides origin and destination cities
 2. **Delivery Calculation**: Helper function calculates estimated delivery time based on distance and average speed (50 mph)
-3. **Status Updates**: Shipment status can be updated via PATCH endpoint
+3. **Status Updates**: Shipment status can be updated via PATCH endpoint with state machine validation
 4. **Storage**: All data is stored in memory (no database)
 
 ## License
