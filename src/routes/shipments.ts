@@ -4,18 +4,32 @@ import {
   getShipmentById,
   updateShipmentStatus,
 } from "../services/shipmentService";
-import { CreateShipmentRequest, ShipmentStatus } from "../types/shipments";
+import {
+  createShipmentSchema,
+  updateStatusSchema,
+} from "../validation/shipmentSchemas";
 
 const router = Router();
 
 // POST /shipments - Create new shipment
 router.post("/", (req, res) => {
+  // Try to validate
+  const validation = createShipmentSchema.safeParse(req.body);
+
+  // Check if it worked
+  if (!validation.success) {
+    // Validation failed, reject it
+    return res.status(400).json({
+      error: "Invalid request body",
+      details: validation.error.issues,
+    });
+  }
+
   try {
-    const request: CreateShipmentRequest = req.body;
-    const shipment = createShipment(request);
+    const shipment = createShipment(validation.data);
     res.status(201).json(shipment);
   } catch (error: any) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -32,16 +46,20 @@ router.get("/:id", (req, res) => {
 
 // PATCH /shipments/:id/status - Update shipment status
 router.patch("/:id/status", (req, res) => {
-  const { status } = req.body;
+  // Validate with Zod
+  const validation = updateStatusSchema.safeParse(req.body);
 
-  if (!status) {
-    return res.status(400).json({ error: "Status is required" });
+  if (!validation.success) {
+    return res.status(400).json({
+      error: "Invalid request body",
+      details: validation.error.issues,
+    });
   }
 
   try {
     const shipment = updateShipmentStatus(
       req.params.id,
-      status as ShipmentStatus
+      validation.data.status
     );
 
     if (!shipment) {
@@ -50,13 +68,10 @@ router.patch("/:id/status", (req, res) => {
 
     res.status(200).json(shipment);
   } catch (error: any) {
-    if (
-      error.message.includes("Invalid status transition") ||
-      error.message.includes("Invalid status")
-    ) {
+    if (error.message.includes("Invalid status transition")) {
       return res.status(400).json({ error: error.message });
     }
-    throw error;
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

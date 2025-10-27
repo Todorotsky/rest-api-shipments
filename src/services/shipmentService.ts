@@ -5,6 +5,7 @@ import {
 } from "../types/shipments";
 import { calculateEstimatedDeliveryTime } from "../utils/deliveryCalculator";
 import { validateStatusTransition } from "../validation/shipmentStateMachine";
+import { randomUUID } from "crypto";
 
 // in-memory storage of the shipments
 export const shipments: Shipment[] = [];
@@ -14,7 +15,7 @@ export function clearShipments(): void {
 }
 
 function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2, 5);
+  return randomUUID();
 }
 
 export function createShipment(request: CreateShipmentRequest): Shipment {
