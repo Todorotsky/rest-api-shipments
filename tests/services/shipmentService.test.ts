@@ -7,6 +7,7 @@ import {
 import { ShipmentStatus } from "../../src/types/shipments";
 
 describe("updateShipmentStatus", () => {
+  // Clears the shipments array before each test
   beforeEach(() => {
     clearShipments();
   });

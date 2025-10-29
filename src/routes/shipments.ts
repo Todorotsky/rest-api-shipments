@@ -11,14 +11,14 @@ import {
 
 const router = Router();
 
-// POST /shipments - Create new shipment
+// POST /shipments - Creates a new shipment
 router.post("/", (req, res) => {
-  // Try to validate
+  // Uses zod to validate the request body (origin and destination has >= 1 character)
   const validation = createShipmentSchema.safeParse(req.body);
 
   // Check if it worked
   if (!validation.success) {
-    // Validation failed, reject it
+    // Validation failed, return 400 Bad Request
     return res.status(400).json({
       error: "Invalid request body",
       details: validation.error.issues,
@@ -26,9 +26,11 @@ router.post("/", (req, res) => {
   }
 
   try {
+    // Takes in the origin/destination and creates a new shipment
     const shipment = createShipment(validation.data);
     res.status(201).json(shipment);
   } catch (error: any) {
+    // e.g. invalid origin/destination
     return res.status(400).json({ error: error.message });
   }
 });

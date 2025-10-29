@@ -1,6 +1,6 @@
 import { ShipmentStatus } from "../types/shipments";
 
-export const VALID_TRANSITIONS: Record<ShipmentStatus, ShipmentStatus[]> = {
+const VALID_TRANSITIONS: Record<ShipmentStatus, ShipmentStatus[]> = {
   [ShipmentStatus.PENDING]: [
     ShipmentStatus.IN_TRANSIT,
     ShipmentStatus.CANCELLED,

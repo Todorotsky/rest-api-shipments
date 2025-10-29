@@ -34,7 +34,11 @@ export function createShipment(request: CreateShipmentRequest): Shipment {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+
+    // Adds the new shipment to the shipments array
     shipments.push(newShipment);
+
+    // Returns the new shipment
     return newShipment;
   } catch (error) {
     throw new Error(
@@ -43,10 +47,12 @@ export function createShipment(request: CreateShipmentRequest): Shipment {
   }
 }
 
+// GET /shipments/:id - Gets a shipment by id
 export function getShipmentById(id: string): Shipment | undefined {
   return shipments.find((shipment) => shipment.id === id);
 }
 
+// PATCH /shipments/:id/status - Updates the status of a shipment
 export function updateShipmentStatus(
   id: string,
   status: ShipmentStatus
@@ -57,6 +63,7 @@ export function updateShipmentStatus(
     return undefined;
   }
 
+  // Validates the status transition (e.g. cannot go from PENDING to DELIVERED)
   validateStatusTransition(shipment.status, status);
 
   shipment.status = status;
