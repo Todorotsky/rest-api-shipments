@@ -26,7 +26,7 @@ describe("calculateEstimatedDeliveryTime", () => {
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
 
-  test("should work in reverse direction", () => {
+  test("should be equal in both directions for calculateEstimatedDeliveryTime", () => {
     const result1 = calculateEstimatedDeliveryTime(
       "New York City, NY",
       "Los Angeles, CA"

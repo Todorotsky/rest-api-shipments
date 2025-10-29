@@ -12,7 +12,7 @@ describe("updateShipmentStatus", () => {
     clearShipments();
   });
 
-  test("should update shipment status when valid id provided", () => {
+  test("should create shipment status when creating a new shipment", () => {
     // Create a shipment
     const request = {
       origin: "New York City, NY",
@@ -34,44 +34,8 @@ describe("updateShipmentStatus", () => {
     expect(stored?.status).toBe(ShipmentStatus.IN_TRANSIT);
   });
 
-  test("should return undefined when shipment not found", () => {
-    // No shipments exist (clearShipments runs in beforeEach)
-
-    // Try to update a non-existent shipment
-    const result = updateShipmentStatus(
-      "fake-id-12345",
-      ShipmentStatus.DELIVERED
-    );
-
-    // Should return undefined
-    expect(result).toBeUndefined();
-  });
-
-  test("should update the updatedAt timestamp", async () => {
-    // Create a shipment
-    const request = {
-      origin: "Reno, NV",
-      destination: "Las Vegas, NV",
-    };
-    const shipment = createShipment(request);
-
-    // Save the original timestamp
-    const originalTimestamp = shipment.updatedAt.getTime();
-
-    // Wait 10 ms to ensure timestamp will be different
-    await new Promise((resolve) => setTimeout(resolve, 10));
-
-    // Update the status
-    const result = updateShipmentStatus(shipment.id, ShipmentStatus.IN_TRANSIT);
-
-    // Verify the timestamp has changed
-    expect(result).not.toBeNull();
-    expect(result?.updatedAt.getTime()).toBeGreaterThan(originalTimestamp);
-    expect(result?.status).toBe(ShipmentStatus.IN_TRANSIT);
-  });
-
   // pending -> in transit -> delivered
-  test("should handle multiple status updates", () => {
+  test("should handle multiple status updates - standard workflow", () => {
     // Arrange: Create a shipment
     const request = {
       origin: "Troy, MI",
@@ -103,7 +67,44 @@ describe("updateShipmentStatus", () => {
     expect(stored?.status).toBe(ShipmentStatus.DELIVERED);
   });
 
-  test("should throw error for invalid transition from pending to delivered", () => {
+  test("should update the updatedAt timestamp when shipment is updated", async () => {
+    // Create a shipment
+    const request = {
+      origin: "Reno, NV",
+      destination: "Las Vegas, NV",
+    };
+    const shipment = createShipment(request);
+
+    // Save the original timestamp
+    const originalTimestamp = shipment.updatedAt.getTime();
+
+    // Wait 10 ms to ensure timestamp will be different
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // Update the status
+    const result = updateShipmentStatus(shipment.id, ShipmentStatus.IN_TRANSIT);
+
+    // Verify the timestamp has changed
+    expect(result).not.toBeNull();
+    expect(result?.updatedAt.getTime()).toBeGreaterThan(originalTimestamp);
+    expect(result?.status).toBe(ShipmentStatus.IN_TRANSIT);
+  });
+
+
+  test("should return undefined when shipment not found", () => {
+    // No shipments exist (clearShipments runs in beforeEach)
+
+    // Try to update a non-existent shipment
+    const result = updateShipmentStatus(
+      "fake-id-12345",
+      ShipmentStatus.DELIVERED
+    );
+
+    // Should return undefined
+    expect(result).toBeUndefined();
+  });
+
+  test("should throw error for updating shipment status from pending to delivered", () => {
     // Create a shipment
     const request = {
       origin: "New York City, NY",
@@ -118,7 +119,7 @@ describe("updateShipmentStatus", () => {
   });
 
   // in transit -> delivered -> pending (should fail)
-  test("should throw error when transitioning from delivered to pending", () => {
+  test("should throw error when updating shipment status from delivered to pending", () => {
     // Create a shipment
     const request = {
       origin: "New York City, NY",

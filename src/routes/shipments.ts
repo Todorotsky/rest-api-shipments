@@ -46,7 +46,7 @@ router.get("/:id", (req, res) => {
 
 // PATCH /shipments/:id/status - Update shipment status
 router.patch("/:id/status", (req, res) => {
-  // Validate with Zod
+  // Validate shipment req status with Zod
   const validation = updateStatusSchema.safeParse(req.body);
 
   if (!validation.success) {
@@ -62,6 +62,7 @@ router.patch("/:id/status", (req, res) => {
     return res.status(404).json({ error: "Shipment not found" });
   }
 
+  // update the shipment status after validating it exists and the status transition (e.g. PENDING -> DELIVERED) is valid
   try {
     const updatedShipment = updateShipmentStatus(
       req.params.id,
@@ -70,7 +71,7 @@ router.patch("/:id/status", (req, res) => {
 
     res.status(200).json(updatedShipment);
   } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message }); // e.g. invalid status transition (e.g. DELIVERED -> IN_TRANSIT)
   }
 });
 

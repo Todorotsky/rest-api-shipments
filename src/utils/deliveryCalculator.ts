@@ -65,6 +65,7 @@ function getCityCoordinates(cityState: string): { lat: number; lon: number } {
   };
 }
 
+// returns distance in miles
 function getDistance(city1: string, city2: string): number {
   const coord1 = getCityCoordinates(city1);
   const coord2 = getCityCoordinates(city2);
