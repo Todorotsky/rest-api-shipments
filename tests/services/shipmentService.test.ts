@@ -4,10 +4,7 @@ import {
   getShipmentById,
   clearShipments,
 } from "../../src/services/shipmentService";
-import {
-  CreateShipmentRequest,
-  ShipmentStatus,
-} from "../../src/types/shipments";
+import { ShipmentStatus } from "../../src/types/shipments";
 
 describe("updateShipmentStatus", () => {
   beforeEach(() => {
@@ -52,8 +49,8 @@ describe("updateShipmentStatus", () => {
   test("should update the updatedAt timestamp", async () => {
     // Arrange: Create a shipment
     const request = {
-      origin: "New York, NY",
-      destination: "Los Angeles, CA",
+      origin: "Reno, NV",
+      destination: "Las Vegas, NV",
     };
     const shipment = createShipment(request);
 
@@ -72,28 +69,35 @@ describe("updateShipmentStatus", () => {
     expect(result?.status).toBe(ShipmentStatus.IN_TRANSIT);
   });
 
+  // pending -> in transit -> delivered
   test("should handle multiple status updates", () => {
     // Arrange: Create a shipment
     const request = {
-      origin: "New York, NY",
-      destination: "Los Angeles, CA",
+      origin: "Troy, MI",
+      destination: "Las Vegas, NV",
     };
     const shipment = createShipment(request);
 
-    const initialStatus = shipment.status; // Should be PENDING
+    // Verify initial status
+    expect(shipment.status).toBe(ShipmentStatus.PENDING);
 
     // Act: Update status multiple times
     const result1 = updateShipmentStatus(
       shipment.id,
       ShipmentStatus.IN_TRANSIT
     );
+
+    // Verify first update
+    expect(result1?.status).toBe(ShipmentStatus.IN_TRANSIT);
+    expect(result1?.id).toBe(shipment.id);
+
     const result2 = updateShipmentStatus(shipment.id, ShipmentStatus.DELIVERED);
 
     // Assert: Verify the final update
     expect(result2?.status).toBe(ShipmentStatus.DELIVERED);
-    expect(result2?.id).toBe(shipment.id); // Same shipment
+    expect(result2?.id).toBe(shipment.id);
 
-    // Also verify it's actually stored in memory
+    // Verify it's actually stored in memory
     const stored = getShipmentById(shipment.id);
     expect(stored?.status).toBe(ShipmentStatus.DELIVERED);
   });
@@ -112,6 +116,7 @@ describe("updateShipmentStatus", () => {
     }).toThrow("Invalid status transition");
   });
 
+  // in transit -> delivered -> pending (should fail)
   test("should throw error when transitioning from terminal state", () => {
     // Arrange: Create a shipment
     const request = {
