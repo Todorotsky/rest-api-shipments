@@ -13,10 +13,12 @@ const VALID_TRANSITIONS: Record<ShipmentStatus, ShipmentStatus[]> = {
   [ShipmentStatus.CANCELLED]: [], // Terminal state
 };
 
+// Checks if the status transition is valid e.g. cannot go from PENDING to DELIVERED
 function isValidStatusTransition(
   currentStatus: ShipmentStatus,
   newStatus: ShipmentStatus
 ): boolean {
+  // Checks if the new status is in the VALID_TRANSITIONS for the current status
   return VALID_TRANSITIONS[currentStatus].includes(newStatus);
 }
 
