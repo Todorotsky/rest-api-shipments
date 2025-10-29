@@ -22,6 +22,7 @@ function isValidStatusTransition(
   return VALID_TRANSITIONS[currentStatus].includes(newStatus);
 }
 
+// Checks if status exists in the ShipmentStatus enum
 function isValidStatus(status: ShipmentStatus): boolean {
   return Object.values(ShipmentStatus).includes(status);
 }
