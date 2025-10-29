@@ -8,7 +8,7 @@ import { validateStatusTransition } from "../validation/shipmentStateMachine";
 import { randomUUID } from "crypto";
 
 // in-memory storage of the shipments
-export const shipments: Shipment[] = [];
+const shipments: Shipment[] = [];
 
 export function clearShipments(): void {
   shipments.length = 0;

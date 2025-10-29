@@ -56,19 +56,21 @@ router.patch("/:id/status", (req, res) => {
     });
   }
 
+  const shipment = getShipmentById(req.params.id);
+
+  if (!shipment) {
+    return res.status(404).json({ error: "Shipment not found" });
+  }
+
   try {
-    const shipment = updateShipmentStatus(
+    const updatedShipment = updateShipmentStatus(
       req.params.id,
       validation.data.status
     );
 
-    if (!shipment) {
-      return res.status(404).json({ error: "Shipment not found" });
-    }
-
-    res.status(200).json(shipment);
+    res.status(200).json(updatedShipment);
   } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 

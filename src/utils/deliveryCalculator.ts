@@ -93,6 +93,6 @@ export function calculateEstimatedDeliveryTime(
   const distance = getDistance(origin, destination);
   const hours = distance / CONSTANT_AVERAGE_SPEED;
   const deliveryDate = new Date();
-  deliveryDate.setHours(deliveryDate.getHours() + Math.ceil(hours));
+  deliveryDate.setTime(deliveryDate.getTime() + hours * 60 * 60 * 1000);
   return deliveryDate;
 }

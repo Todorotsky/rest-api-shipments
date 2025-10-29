@@ -19,9 +19,9 @@ describe("calculateEstimatedDeliveryTime", () => {
       "Los Angeles, CA"
     );
 
-    // NY -> LA: ~2789.4 miles / 50 mph = 55.788 hours, ceil = 56 hours
+    // NY -> LA: ~2789.4 miles / 50 mph = 55.788 hours
     const expectedTime = new Date(mockDate);
-    expectedTime.setHours(expectedTime.getHours() + 56);
+    expectedTime.setTime(expectedTime.getTime() + 55.788 * 60 * 60 * 1000);
 
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
@@ -32,9 +32,9 @@ describe("calculateEstimatedDeliveryTime", () => {
       "San Francisco, CA"
     );
 
-    // LA -> SF: ~381.4 miles / 50 mph = 7.628 hours, ceil = 8 hours
+    // LA -> SF: ~381.4 miles / 50 mph = 7.628 hours
     const expectedTime = new Date(mockDate);
-    expectedTime.setHours(expectedTime.getHours() + 8);
+    expectedTime.setTime(expectedTime.getTime() + 7.628 * 60 * 60 * 1000);
 
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
@@ -65,9 +65,9 @@ describe("calculateEstimatedDeliveryTime", () => {
       "San Francisco, CA"
     );
 
-    // Miami -> SF: ~3107.3 miles / 50 mph = 62.146 hours, ceil = 63 hours
+    // Miami -> SF: ~3107.3 miles / 50 mph = 62.146 hours
     const expectedTime = new Date(mockDate);
-    expectedTime.setHours(expectedTime.getHours() + 63);
+    expectedTime.setTime(expectedTime.getTime() + 62.146 * 60 * 60 * 1000);
 
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
@@ -95,9 +95,9 @@ describe("calculateEstimatedDeliveryTime", () => {
   test("should calculate Chicago -> Houston correctly", () => {
     const result = calculateEstimatedDeliveryTime("Chicago, IL", "Houston, TX");
 
-    // Chicago -> Houston: ~1081.2 miles / 50 mph = 21.624 hours, ceil = 22 hours
+    // Chicago -> Houston: ~1081.2 miles / 50 mph = 21.624 hours
     const expectedTime = new Date(mockDate);
-    expectedTime.setHours(expectedTime.getHours() + 22);
+    expectedTime.setTime(expectedTime.getTime() + 21.624 * 60 * 60 * 1000);
 
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
@@ -105,9 +105,9 @@ describe("calculateEstimatedDeliveryTime", () => {
   test("should calculate Miami -> Houston correctly", () => {
     const result = calculateEstimatedDeliveryTime("Miami, FL", "Houston, TX");
 
-    // Miami -> Houston: ~1187.1 miles / 50 mph = 23.742 hours, ceil = 24 hours
+    // Miami -> Houston: ~1187.1 miles / 50 mph = 23.742 hours
     const expectedTime = new Date(mockDate);
-    expectedTime.setHours(expectedTime.getHours() + 24);
+    expectedTime.setTime(expectedTime.getTime() + 23.742 * 60 * 60 * 1000);
 
     expect(result.getTime()).toBe(expectedTime.getTime());
   });

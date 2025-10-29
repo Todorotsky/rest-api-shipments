@@ -13,7 +13,7 @@ describe("updateShipmentStatus", () => {
   });
 
   test("should update shipment status when valid id provided", () => {
-    // Arrange: Create a shipment
+    // Create a shipment
     const request = {
       origin: "New York City, NY",
       destination: "Los Angeles, CA",
@@ -21,10 +21,10 @@ describe("updateShipmentStatus", () => {
     const shipment = createShipment(request);
     const shipmentId = shipment.id;
 
-    // Act: Update the status
+    // Update the status
     const result = updateShipmentStatus(shipmentId, ShipmentStatus.IN_TRANSIT);
 
-    // Assert: Verify status was updated
+    // Verify status was updated
     expect(result).not.toBeNull();
     expect(result?.status).toBe(ShipmentStatus.IN_TRANSIT);
     expect(result?.id).toBe(shipmentId);
@@ -35,20 +35,20 @@ describe("updateShipmentStatus", () => {
   });
 
   test("should return undefined when shipment not found", () => {
-    // Arrange: No shipments exist (clearShipments runs in beforeEach)
+    // No shipments exist (clearShipments runs in beforeEach)
 
-    // Act: Try to update a non-existent shipment
+    // Try to update a non-existent shipment
     const result = updateShipmentStatus(
       "fake-id-12345",
       ShipmentStatus.DELIVERED
     );
 
-    // Assert: Should return undefined
+    // Should return undefined
     expect(result).toBeUndefined();
   });
 
   test("should update the updatedAt timestamp", async () => {
-    // Arrange: Create a shipment
+    // Create a shipment
     const request = {
       origin: "Reno, NV",
       destination: "Las Vegas, NV",
@@ -58,13 +58,13 @@ describe("updateShipmentStatus", () => {
     // Save the original timestamp
     const originalTimestamp = shipment.updatedAt.getTime();
 
-    // Wait 1 millisecond to ensure timestamp will be different
+    // Wait 10 ms to ensure timestamp will be different
     await new Promise((resolve) => setTimeout(resolve, 10));
 
-    // Act: Update the status
+    // Update the status
     const result = updateShipmentStatus(shipment.id, ShipmentStatus.IN_TRANSIT);
 
-    // Assert: Verify the timestamp has changed
+    // Verify the timestamp has changed
     expect(result).not.toBeNull();
     expect(result?.updatedAt.getTime()).toBeGreaterThan(originalTimestamp);
     expect(result?.status).toBe(ShipmentStatus.IN_TRANSIT);
@@ -82,7 +82,7 @@ describe("updateShipmentStatus", () => {
     // Verify initial status
     expect(shipment.status).toBe(ShipmentStatus.PENDING);
 
-    // Act: Update status multiple times
+    // Update status multiple times
     const result1 = updateShipmentStatus(
       shipment.id,
       ShipmentStatus.IN_TRANSIT
@@ -94,7 +94,7 @@ describe("updateShipmentStatus", () => {
 
     const result2 = updateShipmentStatus(shipment.id, ShipmentStatus.DELIVERED);
 
-    // Assert: Verify the final update
+    // Verify the final update
     expect(result2?.status).toBe(ShipmentStatus.DELIVERED);
     expect(result2?.id).toBe(shipment.id);
 
@@ -103,23 +103,23 @@ describe("updateShipmentStatus", () => {
     expect(stored?.status).toBe(ShipmentStatus.DELIVERED);
   });
 
-  test("should throw error for invalid status transition", () => {
-    // Arrange: Create a shipment
+  test("should throw error for invalid transition from pending to delivered", () => {
+    // Create a shipment
     const request = {
       origin: "New York City, NY",
       destination: "Los Angeles, CA",
     };
     const shipment = createShipment(request);
 
-    // Act & Assert: Try to skip states: Pending → Delivered (should fail)
+    // Try to skip states: Pending → Delivered (should fail)
     expect(() => {
       updateShipmentStatus(shipment.id, ShipmentStatus.DELIVERED);
     }).toThrow("Invalid status transition");
   });
 
   // in transit -> delivered -> pending (should fail)
-  test("should throw error when transitioning from terminal state", () => {
-    // Arrange: Create a shipment
+  test("should throw error when transitioning from delivered to pending", () => {
+    // Create a shipment
     const request = {
       origin: "New York City, NY",
       destination: "Los Angeles, CA",
@@ -130,7 +130,7 @@ describe("updateShipmentStatus", () => {
     updateShipmentStatus(shipment.id, ShipmentStatus.IN_TRANSIT);
     updateShipmentStatus(shipment.id, ShipmentStatus.DELIVERED);
 
-    // Act & Assert: Try to change from Delivered (should fail - terminal state)
+    // Try to change from Delivered (should fail - terminal state)
     expect(() => {
       updateShipmentStatus(shipment.id, ShipmentStatus.PENDING);
     }).toThrow("Invalid status transition");
