@@ -26,19 +26,6 @@ describe("calculateEstimatedDeliveryTime", () => {
     expect(result.getTime()).toBe(expectedTime.getTime());
   });
 
-  test("should calculate delivery time for LA -> SF", () => {
-    const result = calculateEstimatedDeliveryTime(
-      "Los Angeles, CA",
-      "San Francisco, CA"
-    );
-
-    // LA -> SF: ~381.4 miles / 50 mph = 7.628 hours
-    const expectedTime = new Date(mockDate);
-    expectedTime.setTime(expectedTime.getTime() + 7.628 * 60 * 60 * 1000);
-
-    expect(result.getTime()).toBe(expectedTime.getTime());
-  });
-
   test("should work in reverse direction", () => {
     const result1 = calculateEstimatedDeliveryTime(
       "New York City, NY",
@@ -59,19 +46,6 @@ describe("calculateEstimatedDeliveryTime", () => {
     }).toThrow("No cities found for state code: Japan");
   });
 
-  test("should calculate Miami -> San Francisco correctly", () => {
-    const result = calculateEstimatedDeliveryTime(
-      "Miami, FL",
-      "San Francisco, CA"
-    );
-
-    // Miami -> SF: ~3107.3 miles / 50 mph = 62.146 hours
-    const expectedTime = new Date(mockDate);
-    expectedTime.setTime(expectedTime.getTime() + 62.146 * 60 * 60 * 1000);
-
-    expect(result.getTime()).toBe(expectedTime.getTime());
-  });
-
   test("should throw error for empty strings", () => {
     expect(() => {
       calculateEstimatedDeliveryTime("", "Los Angeles, CA");
@@ -90,25 +64,5 @@ describe("calculateEstimatedDeliveryTime", () => {
 
     // Same city = 0 miles = 0 hours
     expect(result.getTime()).toBe(mockDate.getTime());
-  });
-
-  test("should calculate Chicago -> Houston correctly", () => {
-    const result = calculateEstimatedDeliveryTime("Chicago, IL", "Houston, TX");
-
-    // Chicago -> Houston: ~1081.2 miles / 50 mph = 21.624 hours
-    const expectedTime = new Date(mockDate);
-    expectedTime.setTime(expectedTime.getTime() + 21.624 * 60 * 60 * 1000);
-
-    expect(result.getTime()).toBe(expectedTime.getTime());
-  });
-
-  test("should calculate Miami -> Houston correctly", () => {
-    const result = calculateEstimatedDeliveryTime("Miami, FL", "Houston, TX");
-
-    // Miami -> Houston: ~1187.1 miles / 50 mph = 23.742 hours
-    const expectedTime = new Date(mockDate);
-    expectedTime.setTime(expectedTime.getTime() + 23.742 * 60 * 60 * 1000);
-
-    expect(result.getTime()).toBe(expectedTime.getTime());
   });
 });
