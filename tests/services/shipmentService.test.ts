@@ -14,7 +14,7 @@ describe("updateShipmentStatus", () => {
   test("should update shipment status when valid id provided", () => {
     // Arrange: Create a shipment
     const request = {
-      origin: "New York, NY",
+      origin: "New York City, NY",
       destination: "Los Angeles, CA",
     };
     const shipment = createShipment(request);
@@ -105,7 +105,7 @@ describe("updateShipmentStatus", () => {
   test("should throw error for invalid status transition", () => {
     // Arrange: Create a shipment
     const request = {
-      origin: "New York, NY",
+      origin: "New York City, NY",
       destination: "Los Angeles, CA",
     };
     const shipment = createShipment(request);
@@ -120,7 +120,7 @@ describe("updateShipmentStatus", () => {
   test("should throw error when transitioning from terminal state", () => {
     // Arrange: Create a shipment
     const request = {
-      origin: "New York, NY",
+      origin: "New York City, NY",
       destination: "Los Angeles, CA",
     };
     const shipment = createShipment(request);

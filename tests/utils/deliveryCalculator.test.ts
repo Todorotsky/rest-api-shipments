@@ -15,7 +15,7 @@ describe("calculateEstimatedDeliveryTime", () => {
 
   test("should calculate delivery time for NY -> LA", () => {
     const result = calculateEstimatedDeliveryTime(
-      "New York, NY",
+      "New York City, NY",
       "Los Angeles, CA"
     );
 
@@ -41,12 +41,12 @@ describe("calculateEstimatedDeliveryTime", () => {
 
   test("should work in reverse direction", () => {
     const result1 = calculateEstimatedDeliveryTime(
-      "New York, NY",
+      "New York City, NY",
       "Los Angeles, CA"
     );
     const result2 = calculateEstimatedDeliveryTime(
       "Los Angeles, CA",
-      "New York, NY"
+      "New York City, NY"
     );
 
     // Reverse direction should give same result
@@ -55,7 +55,7 @@ describe("calculateEstimatedDeliveryTime", () => {
 
   test("should throw error for unknown city pair", () => {
     expect(() => {
-      calculateEstimatedDeliveryTime("New York, NY", "Tokyo, Japan");
+      calculateEstimatedDeliveryTime("New York City, NY", "Tokyo, Japan");
     }).toThrow("No cities found for state code: Japan");
   });
 
@@ -78,14 +78,14 @@ describe("calculateEstimatedDeliveryTime", () => {
     }).toThrow("Invalid state code: undefined");
 
     expect(() => {
-      calculateEstimatedDeliveryTime("New York, NY", "");
+      calculateEstimatedDeliveryTime("New York City, NY", "");
     }).toThrow("Invalid state code: undefined");
   });
 
   test("should handle same origin and destination (0 distance)", () => {
     const result = calculateEstimatedDeliveryTime(
-      "New York, NY",
-      "New York, NY"
+      "New York City, NY",
+      "New York City, NY"
     );
 
     // Same city = 0 miles = 0 hours

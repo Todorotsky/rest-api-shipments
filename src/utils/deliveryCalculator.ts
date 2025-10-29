@@ -21,21 +21,10 @@ function getCityCoordinates(cityState: string): { lat: number; lon: number } {
     throw new Error(`No cities found for state code: ${stateCode}`);
   }
 
-  // Try exact match first
-  let city = cities.find(
+  // Find city by exact match (case-insensitive)
+  const city = cities.find(
     (c) => c.name.toLowerCase() === cityName.toLowerCase()
   );
-
-  // If no exact match, try partial match (more flexible)
-  if (!city) {
-    city = cities.find(
-      (c) =>
-        c.name.toLowerCase().includes(cityName.toLowerCase()) ||
-        cityName.toLowerCase().includes(c.name.toLowerCase()) ||
-        c.name.toLowerCase().startsWith(cityName.toLowerCase()) ||
-        cityName.toLowerCase().startsWith(c.name.toLowerCase())
-    );
-  }
 
   if (!city) {
     // Provide helpful error message with available cities
